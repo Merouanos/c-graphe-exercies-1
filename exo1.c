@@ -21,7 +21,12 @@ void free_matrix(int **t,int n)
     free(t);
 
 }
-
+void make_matrix_zero(int **t,int n,int m)
+{
+    for(int i=0;i<n;i++)
+     for(int j=0;j<m;j++)
+        t[i][j]=0;
+}
 
 int ** create_random_matrix_indicent(int n, int m)
 {
@@ -31,9 +36,7 @@ int ** create_random_matrix_indicent(int n, int m)
  for(i=0;i<n;i++)
     a[i]=malloc(sizeof(int)*m);
 
-    for(i=0;i<n;i++)
-     for(j=0;j<m;j++)
-        a[i][j]=0;
+    ;
 
     for(j=0;j<m;j++)
     {
@@ -54,9 +57,41 @@ int ** create_random_matrix_indicent(int n, int m)
 
 }
 
+void check_index(int **t, int j,int n,int *start ,int *finish)
+{
+   int k=0;
+   *finish =-1;
+   *start=-1;
+   while(k<n &&(*finish==-1 ||*start ==-1))
+   {
+    if(-1==t[k][j])
+       *finish=k; 
+       else if(1==t[k][j])
+       *start =k;
+        k++;
+
+   }
+
+
+}
+
+int **generate_adjacent(int **t,int n,int m)
+{   
+    int **a=malloc(sizeof(int *)*n);
+    int i,j,start,finish;
+    for (i=0;i<n;i++)
+    a[i]=malloc(sizeof(int)*n);
+    make_matrix_zero(a,n,n);
+    for(j=0;j<m;j++)
+    {
+        check_index(t,j,n,&start,&finish);
+        a[start][finish]=1;
+    }
+    return a;
 
 
 
+}
 
 
 
@@ -66,10 +101,14 @@ int ** create_random_matrix_indicent(int n, int m)
 int main()
 {
     int n=3,m=3;
-    int **t;
+    int **t,**a;
     t=create_random_matrix_indicent(n,m);
     print_matrix(t,n,m);
+    printf("\n");
+    a=generate_adjacent(t,n,m);
+    print_matrix(a,n,m);
     free_matrix(t,n);
+    free_matrix(a,n);
 
 
 
